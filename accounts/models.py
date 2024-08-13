@@ -25,7 +25,9 @@ class UserSignupValidation:
         elif CustomUser.objects.filter(email=email).exists():
             errors = 'Email address is already in use'
 
-        email_regex = re.compile(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
+        email_regex = re.compile(
+            r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
+        )
 
         if not email_regex.match(email):
             errors = 'Please provide a valid email address (e.g., username@gmail.com)'

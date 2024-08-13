@@ -94,7 +94,7 @@ class GetJobManager:
                 }
                 resp_dict['data'] = job_detail
                 resp_dict['status'] = True
-                resp_dict['message'] = "Got Note Successfully"
+                resp_dict['message'] = "Got Job Successfully"
         except Exception as e:
             logging.error('getting exception on get_user_job', repr(e))
         return resp_dict
@@ -123,7 +123,7 @@ class GetAllJobManager:
 
                 resp_dict['data'] = data_list
                 resp_dict['status'] = True
-                resp_dict['message'] = "Got Note Successfully"
+                resp_dict['message'] = "Got Job Successfully"
         except Exception as e:
             logging.error('getting exception on get_user_job_list', repr(e))
         return resp_dict
