@@ -1,20 +1,7 @@
+# dotenv
 .env
-__pycache__/
-.python-version
-# celery beat schedule file
+
+# celery beat schedule files
 celerybeat-schedule.bak
 celerybeat-schedule.dat
 celerybeat-schedule.dir
-# dotenv
-.env
-# virtualenv
-.venv
-venv/
-ENV/
-*/**/migrations/0*.py
-*/**/migrations/0*.pyc
-*/**/migrations/__init__.py
-*/**/migrations/__init__.pyc
-.vscode/
-migrate.sh
-__init__.py
