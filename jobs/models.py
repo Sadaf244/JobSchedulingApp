@@ -7,6 +7,7 @@ class Job(models.Model):
     user = models.ForeignKey(CustomUser, on_delete=models.CASCADE)
     name = models.CharField(max_length=100)
     is_weekly = models.BooleanField(default=False)
+    after_days = models.IntegerField(null=True, blank=True,default=0)
     schedule_time = models.DateTimeField()
     last_run_timestamp = models.DateTimeField(null=True, blank=True)
     next_run_timestamp = models.DateTimeField(null=True, blank=True)
@@ -21,9 +22,9 @@ class Job(models.Model):
         ]
 
     @staticmethod
-    def create_job(user, name, is_weekly, schedule_time):
+    def create_job(user, name, is_weekly, schedule_time, after_days):
 
-        obj = Job.objects.create(user=user, name=name,is_weekly=is_weekly,schedule_time=schedule_time)
+        obj = Job.objects.create(user=user, name=name,is_weekly=is_weekly,schedule_time=schedule_time, after_days= after_days)
         return obj
 
     @staticmethod
@@ -64,9 +65,10 @@ class CreateJobManager:
             name = self.requested_data.data.get('name', None)
             is_weekly = self.requested_data.data.get('is_weekly', None)
             schedule_time = self.requested_data.data.get('schedule_time', None)
+            after_days = self.requested_data.data.get('after_days', 0)
 
             if name is not None and is_weekly is not None and schedule_time is not None:
-                Job.create_job(self.user, name, is_weekly, schedule_time)
+                Job.create_job(self.user, name, is_weekly, schedule_time, after_days)
                 resp_dict['status'] = True
                 resp_dict['message'] = "Job Created and Scheduled Successfully"
         except Exception as e:

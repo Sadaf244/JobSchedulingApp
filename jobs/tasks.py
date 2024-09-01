@@ -29,7 +29,7 @@ class JobExecutor:
         return (schedule_time.weekday() == self.now.weekday() and
                 schedule_time.time() <= self.now.time() and
                 (job.last_run_timestamp is None or
-                 job.last_run_timestamp < self.now - timedelta(days=7)))
+                 job.last_run_timestamp < self.now - timedelta(days=job.after_days)))
 
     def _should_execute_one_time(self, job, schedule_time):
         return schedule_time <= self.now and job.last_run_timestamp is None
@@ -49,14 +49,24 @@ class JobExecutor:
         self.notifications.append(message)
 
     def _update_job_timestamp(self, job):
+        # job.last_run_timestamp = '2024-09-10T23:40:00+05:30'  #Testing Purpose
+        # if isinstance(job.last_run_timestamp, str):
+        #     job.last_run_timestamp = datetime.fromisoformat(job.last_run_timestamp)
         job.last_run_timestamp = self.now
-        job.next_run_timestamp = job.schedule_time + timedelta(weeks=1) if job.is_weekly else None
+        if job.is_weekly:
+            if job.last_run_timestamp is None:
+                job.next_run_timestamp = job.schedule_time + timedelta(days=job.after_days)
+            else:
+                job.next_run_timestamp = job.last_run_timestamp + timedelta(days=job.after_days)
+
 
 
 @shared_task()
 def check_and_execute_jobs():
     kolkata_tz = pytz.timezone('Asia/Kolkata')
     now = datetime.now(kolkata_tz)
+    # now_str = '2024-09-10T23:40:00+05:30'   #for testing purpose
+    # now = datetime.fromisoformat(now_str).astimezone(kolkata_tz)
     jobs = Job.objects.all()
     executor = JobExecutor(jobs, now)
     executor.process_jobs()
